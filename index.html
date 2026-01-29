@@ -4,14 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>都丸さんへのMessage</title>
-
   <meta name="description" content="計算機科学研究室より、卒業を祝う特別なメッセージページです。">
-</head>
 
-
-
-
-  
   <style>
     * { box-sizing: border-box; }
 
@@ -24,13 +18,12 @@
     .box {
       max-width: 520px;
       margin: 0 auto;
-      padding: 0 10px; /* スマホで左右ズレが起きにくい */
+      padding: 0 10px;
     }
 
     h2 { font-size: 28px; margin: 12px 0 18px; }
     h3 { font-size: 18px; margin: 12px 0 18px; }
 
-    /* 入力欄とボタンをピタッと揃える */
     input, button {
       width: 100%;
       display: block;
@@ -39,8 +32,6 @@
       border-radius: 8px;
       border: 1px solid #bbb;
     }
-
-    input { background: #fff; }
 
     button {
       margin-top: 12px;
@@ -55,29 +46,26 @@
       min-height: 1.2em;
     }
 
-    /* 画像表示エリア */
-    #imgWrap {
-      display: none;
-      margin-top: 18px;
-    }
-
-    /* スマホで画像がデカすぎないよう制御 */
-    #imgWrap img {
-      width: 100%;
-      height: auto;
-      max-height: 60vh;     /* 画面の高さの60%まで */
-      object-fit: contain;  /* はみ出さずに収める */
-      border-radius: 12px;
-      display: block;
-    }
-
     .hint {
       opacity: 0.7;
       font-size: 12px;
       margin-top: 10px;
     }
 
-    /* 戻るボタン */
+    #imgWrap {
+      display: none;
+      margin-top: 18px;
+    }
+
+    #imgWrap img {
+      width: 100%;
+      height: auto;
+      max-height: 60vh;
+      object-fit: contain;
+      border-radius: 12px;
+      display: block;
+    }
+
     #backBtn {
       margin-top: 12px;
       background: #fff;
@@ -90,18 +78,19 @@
     <h3>情報教育学研究室　都丸さん</h3>
     <h3>ご卒業おめでとうございます。</h3>
     <h3>新歓高尾山で過去問に釣られて入部を決意したことが、ついこの間のように感じます。</h3>
+
     <h2>パスワードを入力してください</h2>
 
-    <!-- 入力エリア（正解したら隠す） -->
+    <!-- 入力エリア -->
     <div id="authArea">
       <input id="pw" type="password" placeholder="Password" autocomplete="off" />
       <button id="btn" type="button">表示</button>
-      <div class="hint">※パスワードが合うと、この場で画像が表示されます。</div>
+      <div class="hint">※パスワードに応じて画像が表示されます。</div>
     </div>
 
     <div id="msg"></div>
 
-    <!-- 画像エリア（正解したら出す） -->
+    <!-- 画像エリア -->
     <div id="imgWrap">
       <img id="secretImg" alt="secret" />
       <button id="backBtn" type="button">戻る</button>
@@ -109,10 +98,11 @@
   </div>
 
   <script>
-    // ▼ここだけ自分用に設定
-    const CORRECT_PASSWORD = "289cqd";          // ←好きなパスワードに変更
-    const IMAGE_URL = "./img/tomatatsu.jpg";// ←画像ファイル名に合わせる
-    const IMAGE_URL = "./img/tomatatsu2.jpg";
+    // ▼ パスワード → 表示画像の対応表
+    const PASSWORD_IMAGE_MAP = {
+      "289cqd": "./img/tomatatsu.jpg",
+      "tatsuya_ygt": "./img/tomatatsu2.jpg"
+    };
 
     const pw = document.getElementById("pw");
     const btn = document.getElementById("btn");
@@ -127,8 +117,8 @@
       msg.style.color = ok ? "green" : "crimson";
     }
 
-    function showImage() {
-      img.src = IMAGE_URL;
+    function showImage(imageUrl) {
+      img.src = imageUrl;
       imgWrap.style.display = "block";
       authArea.style.display = "none";
     }
@@ -143,26 +133,25 @@
     }
 
     function check() {
-      if (pw.value === CORRECT_PASSWORD) {
+      const input = pw.value;
+      const imageUrl = PASSWORD_IMAGE_MAP[input];
+
+      if (imageUrl) {
         showMessage("たっちゃん！おつかれ！", true);
-        showImage();
+        showImage(imageUrl);
       } else {
         showMessage("パスワードが違います。");
       }
     }
 
-    // ボタンで判定
     btn.addEventListener("click", check);
 
-    // Enterキーでも判定（スマホで便利）
     pw.addEventListener("keydown", (e) => {
       if (e.key === "Enter") check();
     });
 
-    // 戻る
     backBtn.addEventListener("click", resetToPassword);
 
-    // 初期フォーカス（PCで便利）
     pw.focus();
   </script>
 </body>
